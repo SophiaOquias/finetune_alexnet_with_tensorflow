@@ -69,13 +69,15 @@ with tf.device('/cpu:0'):
                                   shuffle=False)
 
     # create an reinitializable iterator given the dataset structure
-    iterator = iter(tr_data.data.output_types,
-                                       tr_data.data.output_shapes)
-    next_batch = iterator.get_next()
+    # iterator = iter(tr_data.data.output_types,
+    #                                    tr_data.data.output_shapes)
+    iterator = tf.data.Iterator.from_structure(tr_data.data.output_types, tr_data.data.output_shapes)
+    next_batch = iterator.get_next(name="get_next")
 
 # Ops for initializing the two different iterators
 training_init_op = iterator.make_initializer(tr_data.data)
 validation_init_op = iterator.make_initializer(val_data.data)
+iterator_init_op = iterator.make_initializer(tr_data.data)
 
 # TF placeholder for graph input and output
 x = tf.placeholder(tf.float32, [batch_size, 227, 227, 3])
@@ -143,7 +145,8 @@ val_batches_per_epoch = int(np.floor(val_data.data_size / batch_size))
 with tf.Session() as sess:
 
     # Initialize all variables
-    sess.run(tf.global_variables_initializer())
+    # sess.run(tf.global_variables_initializer())
+    sess.run(iterator_init_op)
 
     # Add the model graph to TensorBoard
     writer.add_graph(sess.graph)
@@ -206,3 +209,5 @@ with tf.Session() as sess:
 
         print("{} Model checkpoint saved at {}".format(datetime.now(),
                                                        checkpoint_name))
+        
+        sess.run(iterator_init_op)
