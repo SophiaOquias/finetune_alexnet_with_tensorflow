@@ -15,20 +15,20 @@ contact: f.kratzert(at)gmail.com
 import os
 
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 from alexnet import AlexNet
 from datagenerator import ImageDataGenerator
 from datetime import datetime
-from tensorflow.contrib.data import Iterator
+# from tensorflow.compat.v1.contrib.data import Iterator
 
 """
 Configuration Part.
 """
 
 # Path to the textfiles for the trainings and validation set
-train_file = '/path/to/train.txt'
-val_file = '/path/to/val.txt'
+train_file = 'train.txt'
+val_file = 'val.txt'
 
 # Learning params
 learning_rate = 0.01
@@ -37,15 +37,15 @@ batch_size = 128
 
 # Network params
 dropout_rate = 0.5
-num_classes = 2
+num_classes = 7
 train_layers = ['fc8', 'fc7', 'fc6']
 
 # How often we want to write the tf.summary data to disk
 display_step = 20
 
 # Path for tf.summary.FileWriter and to store model checkpoints
-filewriter_path = "/tmp/finetune_alexnet/tensorboard"
-checkpoint_path = "/tmp/finetune_alexnet/checkpoints"
+filewriter_path = "tmp/finetune_alexnet/tensorboard"
+checkpoint_path = "tmp/finetune_alexnet/checkpoints"
 
 """
 Main Part of the finetuning Script.
@@ -69,7 +69,7 @@ with tf.device('/cpu:0'):
                                   shuffle=False)
 
     # create an reinitializable iterator given the dataset structure
-    iterator = Iterator.from_structure(tr_data.data.output_types,
+    iterator = iter(tr_data.data.output_types,
                                        tr_data.data.output_shapes)
     next_batch = iterator.get_next()
 
