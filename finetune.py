@@ -15,12 +15,12 @@ contact: f.kratzert(at)gmail.com
 import os
 
 import numpy as np
-import tensorflow.compat.v1 as tf
+import tensorflow as tf
 
 from alexnet import AlexNet
 from datagenerator import ImageDataGenerator
 from datetime import datetime
-# from tensorflow.compat.v1.contrib.data import Iterator
+from tensorflow.contrib.data import Iterator
 
 """
 Configuration Part.
@@ -31,7 +31,7 @@ train_file = 'train.txt'
 val_file = 'val.txt'
 
 # Learning params
-learning_rate = 0.01
+learning_rate = 0.001
 num_epochs = 10
 batch_size = 128
 
@@ -69,15 +69,13 @@ with tf.device('/cpu:0'):
                                   shuffle=False)
 
     # create an reinitializable iterator given the dataset structure
-    # iterator = iter(tr_data.data.output_types,
-    #                                    tr_data.data.output_shapes)
-    iterator = tf.data.Iterator.from_structure(tr_data.data.output_types, tr_data.data.output_shapes)
-    next_batch = iterator.get_next(name="get_next")
+    iterator = Iterator.from_structure(tr_data.data.output_types,
+                                       tr_data.data.output_shapes)
+    next_batch = iterator.get_next()
 
 # Ops for initializing the two different iterators
 training_init_op = iterator.make_initializer(tr_data.data)
 validation_init_op = iterator.make_initializer(val_data.data)
-iterator_init_op = iterator.make_initializer(tr_data.data)
 
 # TF placeholder for graph input and output
 x = tf.placeholder(tf.float32, [batch_size, 227, 227, 3])
@@ -145,8 +143,7 @@ val_batches_per_epoch = int(np.floor(val_data.data_size / batch_size))
 with tf.Session() as sess:
 
     # Initialize all variables
-    # sess.run(tf.global_variables_initializer())
-    sess.run(iterator_init_op)
+    sess.run(tf.global_variables_initializer())
 
     # Add the model graph to TensorBoard
     writer.add_graph(sess.graph)
@@ -209,5 +206,3 @@ with tf.Session() as sess:
 
         print("{} Model checkpoint saved at {}".format(datetime.now(),
                                                        checkpoint_name))
-        
-        sess.run(iterator_init_op)

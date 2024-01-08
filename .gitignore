@@ -2,3 +2,5 @@
 **/*.pyc
 CK+48/
 myenv/
+.python-version
+tmp/

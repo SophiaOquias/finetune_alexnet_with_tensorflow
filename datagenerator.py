@@ -4,10 +4,10 @@
 
 """Containes a helper class for image input pipelines in tensorflow."""
 
-import tensorflow.compat.v1 as tf
+import tensorflow as tf
 import numpy as np
 
-from tensorflow.compat.v1.data import Dataset
+from tensorflow.contrib.data import Dataset
 from tensorflow.python.framework import dtypes
 from tensorflow.python.framework.ops import convert_to_tensor
 
@@ -25,9 +25,9 @@ class ImageDataGenerator(object):
         """Create a new ImageDataGenerator.
 
         Recieves a path string to a text file, which consists of many lines,
-        where each line has first a path string to an image and separated by
+        where each line has first a path string to an image and seperated by
         a space an integer, referring to the class number. Using this data,
-        this class will create TensorFlow datasets, that can be used to train
+        this class will create TensrFlow datasets, that can be used to train
         e.g. a convolutional neural network.
 
         Args:
@@ -38,7 +38,7 @@ class ImageDataGenerator(object):
             num_classes: Number of classes in the dataset.
             shuffle: Wether or not to shuffle the data in the dataset and the
                 initial file list.
-            buffer_size: Number of images used as a buffer for TensorFlow's
+            buffer_size: Number of images used as buffer for TensorFlows
                 shuffling of the dataset.
 
         Raises:
@@ -67,12 +67,12 @@ class ImageDataGenerator(object):
 
         # distinguish between train/infer. when calling the parsing functions
         if mode == 'training':
-            data = data.map(self._parse_function_train, num_parallel_calls=8)
-            data = data.prefetch(buffer_size=100 * batch_size)
+            data = data.map(self._parse_function_train, num_threads=8,
+                      output_buffer_size=100*batch_size)
 
         elif mode == 'inference':
-            data = data.map(self._parse_function_inference, num_parallel_calls=8)
-            data = data.prefetch(buffer_size=100 * batch_size)
+            data = data.map(self._parse_function_inference, num_threads=8,
+                      output_buffer_size=100*batch_size)
 
         else:
             raise ValueError("Invalid mode '%s'." % (mode))
@@ -118,7 +118,7 @@ class ImageDataGenerator(object):
         img_decoded = tf.image.decode_png(img_string, channels=3)
         img_resized = tf.image.resize_images(img_decoded, [227, 227])
         """
-        Data augmentation comes here.
+        Dataaugmentation comes here.
         """
         img_centered = tf.subtract(img_resized, IMAGENET_MEAN)
 

@@ -21,7 +21,7 @@ folder as this file:
 @author: Frederik Kratzert (contact: f.kratzert(at)gmail.com)
 """
 
-import tensorflow.compat.v1 as tf
+import tensorflow as tf
 import numpy as np
 
 
@@ -138,10 +138,10 @@ def conv(x, filter_height, filter_width, num_filters, stride_y, stride_x, name,
 
     with tf.variable_scope(name) as scope:
         # Create tf variables for the weights and biases of the conv layer
-        weights = tf.get_variable('weights', shape=[int(filter_height),
-                                            int(filter_width),
-                                            int(input_channels/groups),
-                                            int(num_filters)])
+        weights = tf.get_variable('weights', shape=[filter_height,
+                                                    filter_width,
+                                                    input_channels/groups,
+                                                    num_filters])
         biases = tf.get_variable('biases', shape=[num_filters])
 
     if groups == 1:
