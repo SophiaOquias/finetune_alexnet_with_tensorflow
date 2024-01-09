@@ -6,7 +6,7 @@ root_dir = 'CK+48/'
 # Define the labels and their corresponding folder names
 labels = {'0': 'happy', 
           '1': 'sad', 
-          '2': 'angry',
+          '2': 'anger',
           '3': 'contempt',
           '4': 'disgust',
           '5': 'fear',
