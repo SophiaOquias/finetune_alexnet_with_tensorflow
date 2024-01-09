@@ -1,6 +1,7 @@
 *.npy
 **/*.pyc
 CK+48/
+CK+/
 myenv/
 .python-version
 tmp/

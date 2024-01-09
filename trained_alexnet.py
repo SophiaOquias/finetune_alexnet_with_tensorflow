@@ -2,14 +2,24 @@ import os
 import cv2
 import numpy as np
 import tensorflow as tf
+from tkinter import Tk, filedialog
 
 from alexnet import AlexNet
 
 # Path to the saved checkpoint
 checkpoint_path = 'tmp/finetune_alexnet/checkpoints/model_epoch10.ckpt'
 
-# Image file path for prediction
-image_path = 'CK+48/surprise/surprise_1.png'
+# Initialize Tkinter root window (this will remain hidden)
+root = Tk()
+root.withdraw()
+
+# Open a file dialog for image selection
+image_path = filedialog.askopenfilename(title="Select an image", filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
+
+# Check if the user selected a file
+if not image_path:
+    print("No image selected. Exiting.")
+    exit()
 
 # Load the image and preprocess it
 img = cv2.imread(image_path)
