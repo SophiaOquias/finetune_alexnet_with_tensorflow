@@ -28,7 +28,16 @@ img = img.astype(np.float32)
 img = np.expand_dims(img, axis=0)
 
 # Define the label mapping
-label_mapping = {0: 'happy', 1: 'sad', 2: 'anger', 3: 'contempt', 4: 'disgust', 5: 'fear', 6: 'surprise'}
+label_mapping = {
+    0: 'neutral', 
+    1: 'anger', 
+    2: 'contempt', 
+    3: 'disgust', 
+    4: 'fear', 
+    5: 'happy', 
+    6: 'sadness', 
+    7: 'surprise'
+    }
 
 # Placeholder for input image
 x = tf.placeholder(tf.float32, [None, 227, 227, 3])

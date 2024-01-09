@@ -10,7 +10,7 @@ with open(class_list_file, 'r') as file:
     labels = [line.split()[1] for line in lines]
 
 # Split the data into training and validation sets (e.g., 80% training, 20% validation)
-train_paths, val_paths, train_labels, val_labels = train_test_split(image_paths, labels, test_size=0.2, random_state=42)
+train_paths, val_paths, train_labels, val_labels = train_test_split(image_paths, labels, test_size=0.3, random_state=42)
 
 # Define output file paths for training and validation sets
 train_output_file = 'train.txt'
