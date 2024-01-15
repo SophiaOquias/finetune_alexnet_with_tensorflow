@@ -31,14 +31,14 @@ train_file = 'train.txt'
 val_file = 'val.txt'
 
 # Learning params
-learning_rate = 0.001
+learning_rate = 0.0001
 num_epochs = 50
-batch_size = 8
+batch_size = 20
 
 # Network params
 dropout_rate = 0.5
 num_classes = 8
-train_layers = ['fc8', 'fc7']
+train_layers = ['fc8', 'fc7', 'fc6']
 
 # How often we want to write the tf.summary data to disk
 display_step = 20

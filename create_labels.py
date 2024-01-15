@@ -53,7 +53,7 @@ def get_emotion_label(emotion_file_path):
 image_paths_labels = []
 
 # Iterate through image sequences
-for root, dirs, files in os.walk(os.path.join(dataset_path, "cohn-kanade-images")):
+for root, dirs, files in os.walk(os.path.join(dataset_path, "aligned")):
     for file in files:
         if file.endswith(".png"):
             image_path = os.path.join(root, file)
@@ -69,10 +69,10 @@ for root, dirs, files in os.walk(os.path.join(dataset_path, "cohn-kanade-images"
                 label = get_emotion_label(emotion_file_path)
                 image_paths_labels.append(f"{image_path} {label}")
 
-                random_number = random.randint(0, 7)
-                if(random_number == 0): 
-                    neutral_path = os.path.join(dataset_path, "cohn-kanade-images", subject, sequence, f"{subject}_{sequence}_00000001.png")
-                    image_paths_labels.append(f"{neutral_path} {NEUTRAL}")
+                # random_number = random.randint(0, 7)
+                # if(random_number == 0): 
+                neutral_path = os.path.join(dataset_path, "aligned", subject, sequence, f"{subject}_{sequence}_00000001.png")
+                image_paths_labels.append(f"{neutral_path} {NEUTRAL}")
 
 
 # Write the image paths and labels to a text file

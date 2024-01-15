@@ -7,7 +7,7 @@ from tkinter import Tk, filedialog
 from alexnet import AlexNet
 
 # Path to the saved checkpoint
-checkpoint_path = 'tmp/finetune_alexnet/checkpoints/model_epoch10.ckpt'
+checkpoint_path = 'tmp/finetune_alexnet/checkpoints/model_epoch48.ckpt'
 
 # Initialize Tkinter root window (this will remain hidden)
 root = Tk()
@@ -46,7 +46,7 @@ x = tf.placeholder(tf.float32, [None, 227, 227, 3])
 keep_prob = tf.placeholder(tf.float32)
 
 # Initialize the AlexNet model
-model = AlexNet(x, keep_prob, num_classes=7, skip_layer=['fc8'])
+model = AlexNet(x, keep_prob, num_classes=8, skip_layer=None)
 
 # Link variable to model output
 score = model.fc8
