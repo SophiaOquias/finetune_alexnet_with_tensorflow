@@ -87,17 +87,6 @@ from alexnet import AlexNet  # Assuming you have the AlexNet model implemented i
 # Suppress NumPy FutureWarnings
 warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
 
-label_mapping = {
-    0: 'neutral', 
-    1: 'anger', 
-    2: 'contempt', 
-    3: 'disgust', 
-    4: 'fear', 
-    5: 'happy', 
-    6: 'sadness', 
-    7: 'surprise'
-    }
-
 # Path to the saved checkpoint
 checkpoint_path = 'tmp/finetune_alexnet/checkpoints/model_epoch48.ckpt'
 
@@ -143,10 +132,8 @@ with tf.Session() as sess:
     saver.restore(sess, checkpoint_path)
     print("Model restored from:", checkpoint_path)
 
-    i = 0
-
     # Make predictions for each image
-    for image_path in image_paths:
+    for image_path, ground_truth_label in zip(image_paths, ground_truth_labels):
         img = cv2.imread(image_path)
         img = cv2.resize(img, (227, 227))
         img = img.astype(np.float32)
@@ -158,14 +145,32 @@ with tf.Session() as sess:
 
         # Get the predicted label
         predicted_label = np.argmax(predictions)
-        # print(f"Prediction: {label_mapping[predicted_label]} \t Actual: {label_mapping[ground_truth_labels[i]]}")
         predictions_list.append(predicted_label)
 
-        i += 1
-
-# Calculate accuracy
+# Calculate overall accuracy
 correct_predictions = np.sum(np.array(predictions_list) == np.array(ground_truth_labels))
 total_images = len(ground_truth_labels)
-accuracy = correct_predictions / total_images * 100
+overall_accuracy = correct_predictions / total_images * 100
 
-print(f"Total Accuracy: {accuracy}%")
+print(f"Overall Accuracy: {overall_accuracy}%")
+
+label_mapping = {
+    0: 'Neutral', 
+    1: 'Anger', 
+    2: 'Contempt', 
+    3: 'Disgust', 
+    4: 'Fear', 
+    5: 'Happy', 
+    6: 'Sadness', 
+    7: 'Surprise'
+    }
+
+# Calculate and print accuracy per class
+unique_labels = set(ground_truth_labels)
+for label in unique_labels:
+    if label in ground_truth_labels:
+        correct_predictions_class = np.sum(np.array(predictions_list)[np.array(ground_truth_labels) == label] == label)
+        total_images_class = np.sum(np.array(ground_truth_labels) == label)
+        accuracy_class = correct_predictions_class / total_images_class * 100
+        print(f"Class {label_mapping[label]} Accuracy: {accuracy_class}%")
+
