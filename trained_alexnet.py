@@ -140,7 +140,7 @@ with tf.Session() as sess:
         img = np.expand_dims(img, axis=0)
 
         # Make predictions
-        feed_dict = {x: img, keep_prob: 1.0}  # No dropout during inference
+        feed_dict = {x: img, keep_prob: 0.5}  # keep_prob is the dropout 
         predictions = sess.run(probs, feed_dict=feed_dict)
 
         # Get the predicted label
