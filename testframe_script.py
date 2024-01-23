@@ -1,5 +1,6 @@
 import csv
 import os
+import random
 
 # Mapping of numeric labels to emotions
 labels_mapping = {
@@ -37,32 +38,34 @@ def extract_frames(root_folder, file_name, labels_file, timestamp_column='timest
                     frame_row = {key.strip(): value.strip() for key, value in frame_row.items()}
                     
                     if timestamp_column in frame_row:
-                        timestamp_ms = float(frame_row[timestamp_column])
-                        if start_time_ms <= timestamp_ms <= end_time_ms:
-                            image_path = os.path.join(root_folder, f"{file_name}_aligned/frame_det_00_{frame_row['frame'].zfill(6)}.png")
+                        random_integer = random.randint(1, 30)
+                        if random_integer % 10 == 0: 
+                            timestamp_ms = float(frame_row[timestamp_column])
+                            if start_time_ms <= timestamp_ms <= end_time_ms:
+                                image_path = os.path.join(root_folder, f"{file_name}_aligned/frame_det_00_{frame_row['frame'].zfill(6)}.png")
 
-                            numeric_label = row['Classes']
-                            emotion_label = labels_mapping.get(numeric_label, 'unknown')
-                            results.append((image_path, emotion_label))
+                                numeric_label = row['Classes']
+                                emotion_label = labels_mapping.get(numeric_label, 'unknown')
+                                results.append((image_path, emotion_label))
 
     # Write results to the output file after processing all rows
     write_to_output(results)
 
 def write_to_output(results):
     output_file = 'testframes.txt'
-    with open(output_file, 'w') as output_txt:
+    with open(output_file, 'a') as output_txt:
         for image_path, label in results:
             output_txt.write(f"{image_path} {label}\n")
 
 if __name__ == "__main__":
-    root_folder = "recordings/Video_1"
-    file_name = "10_1"
-    labels_file = os.path.join(root_folder, f"{file_name}_labels.csv")
+    for i in range(1, 11): 
+        participant_number = i
+        root_folder = f"recordings/{participant_number}_1"
+        file_name = f"{participant_number}_1"
+        labels_file = os.path.join(root_folder, f"{file_name}_labels.csv")
 
-    # Check if output file exists, remove if it does
-    output_file = 'testframes.txt'
-    if os.path.exists(output_file):
-        os.remove(output_file)
+        # Check if output file exists, remove if it does
+        output_file = 'testframes.txt'
 
-    extract_frames(root_folder, file_name, labels_file)
-    print(f"Script executed successfully. Output written to {output_file}")
+        extract_frames(root_folder, file_name, labels_file)
+        print(f"Script executed successfully. Output written to {output_file}")
